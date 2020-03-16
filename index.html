@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>MetaCog Lesson Planner</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script>
+
+    document.addEventListener('DOMContentLoaded', function () {
+      Vue.component('titlesection', {
+
+        template: '<div class="jumbotron text-white bg-primary text-center"><h1>Meta-Cognitive Lesson Planner</h1></div>'
+      })
+      Vue.component('lessonplanner', {
+        props: [
+          'section'
+        ],
+        template: '<div class="row m-2 p-3 border"><label class="col-3 font-weight-bold" v-bind:for="section.sectionName">{{section.sectionName}}</label>  <select v-model="section.selected" class="col-9"><option disabled value="">Please select one</option><option v-for=\'option in section.options\' v-bind:value=option.text>{{option.text}}</option></select></div>'
+      })
+      Vue.component('lessonsection', {
+        props: [
+          'title',
+          'selection',
+          'bg-color'
+        ],
+        template: '<div class="card m-2 p-3 "><h2 class="card-title">{{title}}:</h2> <span class="card-text">{{selection}}</span></div>'
+      })
+      new Vue({
+        el: '#app',
+
+        data: {
+
+          show: true,
+          buttontext: 'Build Lesson Plan',
+          sections: {
+            teacherscript: {
+              id: 0,
+              sectionName: 'Teacher Script',
+              selected: '',
+              options: [
+                {text: 'The key objective for today\'s lesson is ________.'},
+                {text: 'The topic for exploration today is ________.'},
+                {text: 'Yesterday we learned about _________, so today we will follow up with _________.'}
+              ]
+
+            },
+            before: {
+              id: 1,
+              sectionName: 'Before',
+              selected: '',
+              options: [
+                {text: 'How is this material relevant to me?'},
+                {text: 'How did you determine this to be true?'},
+                {text: 'How would you agree or disagree with this?'}
+              ]
+
+            },
+            during: {
+              id: 2,
+              sectionName: 'During',
+              selected: '',
+              options: [
+                {text: 'What is most difficult for me in this task? Most confusing?'},
+                {text: 'Am I able to tell what\'s important and what is not so important? If not, why not?'},
+                {text: 'If my motivation is flagging, why am I taking this course?'}
+              ]
+
+            },
+            after: {
+              id: 3,
+              sectionName: 'After',
+              selected: '',
+              options: [
+                {text: 'What can I do to resolve confusion or questions?'},
+                {text: '(in response to an answer):...what if I said that\'s not true?'},
+                {text: 'What did I learn today that was new? Familiar? In conflict with previous beliefs?'}
+              ]
+
+
+            }
+        }
+      },
+      methods: {
+        changeshow: function(event) {
+          this.show = !this.show
+          this.buttontext = this.show ? "Show Lesson Plan" : "Build Lesson Plan"
+        }
+      }
+      })
+    })
+  </script>
+</head>
+<body>
+
+  <div class="container"id="app">
+    <TitleSection></TitleSection>
+      <transition name="slide-fade">
+        <div class="card" v-if="show">
+        <LessonPlanner v-for='section in sections' v-bind:section=section v-bind:key=section.id></LessonPlanner>
+        </div>
+      </transition>
+      <button class="btn btn-primary" @click='changeshow'>{{buttontext}}</button>
+    <LessonSection class="mt-5" v-for='section in sections' v-bind:title=section.sectionName v-bind:selection=section.selected></LessonSection>
+
+  </div>
+
+</body>
+</html>
